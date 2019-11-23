@@ -4,8 +4,8 @@ from station import settings
 
 
 class UserList(models.Model):
-    token = models.AutoField()
-    uid = models.IntegerField(max_length=15)
+    token = models.TextField(max_length=100)
+    uid = models.TextField()
 
     def __str__(self):
         return self.uid

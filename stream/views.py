@@ -3,13 +3,14 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.urls import reverse
 from django.core.files.base import ContentFile
 
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import UserList, UploadModel, DownloadModel
 from .forms import UploadForm, DownloadForm
 from AI import functions
 from station import settings
 
 import json
-from base64 import b64encode, b64decode
 from PIL import Image
 
 
@@ -20,8 +21,8 @@ def __create_new_user(token):
         except UserList.DoesNotExist:
             return UserList(pk=token, uid=i)
 
-
-def cross(request, token):
+@csrf_exempt
+def cross(request):
     """
     Check request method type(GET, POST) and redirect request to proper stream.
     GET will be redirected to download to send transformed file
@@ -33,12 +34,21 @@ def cross(request, token):
     # TODO
     # 1. change token into user id
     # 2. Drop token column from request body.
-    data = json.loads(request.body.decode('utf-8'))
+
+    # data = request.GET
+    # token = request.GET['token']
+    # print(token)
+
     if request.method == 'GET':
+        """
+        GET method must requested after transformation.
+        Find result filenames, open image in server, send Image object.
+        """
+        print(request)
+        return HttpResponse('OK')
         user_object = get_object_or_404(UserList, pk=token)
         uid = int('%s' % user_object)
         try:
-
             del data['token']
             data['uid'] = uid
 
@@ -49,12 +59,20 @@ def cross(request, token):
             img = open(filename, 'r')
 
             # TODO
-            # make response instance, Just body done.
-            # Should divide non-critical part and make them out of this scope.
+            # Divide non-critical part and make them out of this scope.
+            # Add CycleGAN results when use_recommendation
             return HttpResponse(data=img, content_type='image/jpg', category=category)
         except (KeyError, UserList.DoesNotExist):
             raise Http404('No user using this token %s' % token)
     elif request.method == 'POST':
+        """
+        POST method must requested before transformation.
+        Make save image path, create uid if new, image encoding format
+        is discussing now.
+        """
+        print(request)
+        print(request.body)
+        return HttpResponse('POST OK')
         try:
             user_object = UserList.objects.get(pk=token)
         except UserList.DoesNotExist:
@@ -76,6 +94,9 @@ def cross(request, token):
             pattern_img = pattern['image_info']
 
         try:
+            # TODO
+            # connect with forms, AI part.....
+            # Think about multithreading(for GPU) / progressbar
             img = data['file'].split(';base64,')
             filename = lambda image: '%d.%s' % (uid, image['content_type'].split('/')[-1])
 

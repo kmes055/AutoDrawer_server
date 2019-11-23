@@ -25,12 +25,13 @@ SECRET_KEY = '!+oiw-=+v_8p53lwwuf$mtf%dktucp#flq%hm=&=gjqx1aqsx-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['172.16.20.133']
+ALLOWED_HOSTS = ['10.11.42.69', '10.11.39.166', '127.0.0.1', '172.16.20.133']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'stream.apps.StreamConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

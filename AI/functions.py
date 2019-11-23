@@ -1,7 +1,6 @@
 from threading import Thread, Lock
 from subprocess import run
 
-
 # Metadata
 
 AI_ext = 'jpg'
@@ -15,9 +14,6 @@ def start_new_thread(function):
         t.daemon = True
         t.start()
     return decorator
-
-
-
 
 
 @start_new_thread
@@ -49,7 +45,7 @@ def __transform_textureGAN(sketch, pattern, category, params):
     pass
 
 
-def __transform_CycleGAN(image, category, params):
+def __transform_DiscoGAN(image, category, params):
     pass
 
 
