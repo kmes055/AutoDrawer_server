@@ -11,6 +11,8 @@ from AI import functions
 from station import settings
 
 import json
+
+import json
 from PIL import Image
 
 
@@ -70,9 +72,18 @@ def cross(request):
         Make save image path, create uid if new, image encoding format
         is discussing now.
         """
+
         print(request)
-        print(request.body)
+        data = json.loads(request.body.decode('utf-8'))
+        print(data.keys())
+        print(data['pattern'])
+
+        with open('images/sample.jpg', 'wb') as f:
+            import base64
+            f.write(base64.decodebytes(str.encode(data['sketch'])))
+
         return HttpResponse('POST OK')
+
         try:
             user_object = UserList.objects.get(pk=token)
         except UserList.DoesNotExist:
