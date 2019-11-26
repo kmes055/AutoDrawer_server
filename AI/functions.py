@@ -1,11 +1,6 @@
-from threading import Thread, Lock
+from threading import Thread
+from .metadata import file_transform_mutex
 from subprocess import run
-
-# Metadata
-
-AI_ext = 'jpg'
-file_transform_mutex = Lock()
-category_list = ['handbag', 'shoes', 'hat']
 
 
 def start_new_thread(function):
@@ -16,8 +11,8 @@ def start_new_thread(function):
     return decorator
 
 
-@start_new_thread
-def file_transform(sketch, pattern, category, use_recommend):
+# @start_new_thread
+def file_transform(sketch, pattern, category, recommend):
 
     # f = open(filename, 'r')
     # if category not in category_list:
@@ -27,17 +22,17 @@ def file_transform(sketch, pattern, category, use_recommend):
     #     pass
 
     try:
-        file_transform_mutex.acquire()
+        # file_transform_mutex.acquire()
         """
         Do Something
         """
 
         params = {"TextureGAN": [],
-                  "CycleGAN": []}  # AI parameters.
+                  "DiscoGAN": []}  # AI parameters.
         # run('python')
         pass
     finally:
-        file_transform_mutex.release()
+        # file_transform_mutex.release()
         return sketch
 
 
