@@ -1,18 +1,27 @@
 from threading import Lock
+import os
 
 max_user = 15
 AI_ext = 'jpg'
 file_transform_mutex = Lock()
 category_list = ['handbag', 'shoes', 'hat']
-sketch_dir = 'C:/Capstone/server_dataset/sketch/'
-pattern_dir = 'C:/Capstone/server_dataset/pattern/'
+dir_root = 'C:/Capstone/server_dataset/'
+
 __valid_tokens = []
 
 
 def push(token):
     if len(__valid_tokens) == max_user:
-        __valid_tokens.pop(0)
+        return -1
     __valid_tokens.append(token)
+    if not os.path.exists(dir_root + token):
+        os.mkdir(dir_root + token)
+        user_dir = dir_root + token + '/'
+        os.mkdir(user_dir + 'sketch')
+        os.mkdir(user_dir + 'segmentation')
+        os.mkdir(user_dir + 'pattern')
+        os.mkdir(user_dir + 'textureGAN')
+        os.mkdir(user_dir + 'discoGAN')
     return token
 
 

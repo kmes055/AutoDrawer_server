@@ -1,12 +1,14 @@
 import json
 import base64
+import os
 from PIL import Image
+from io import BytesIO
 
 from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 
 from AI import functions, metadata
-
+from AI.segmentation import segmentate
 
 @csrf_exempt
 def cross(request):
@@ -22,28 +24,28 @@ def cross(request):
     # 2. Drop token column from request body.
 
     # data: Dictionary
-    data = json.loads(request.body.decode('utf-8'))
-    token = json.loads(request.headers.decode('utf-8'))['token']
 
     if request.method == 'GET':
         """
         GET method must requested after transformation.
         Find result filenames, open image in server, send Image object.
         """
-        if metadata.exist(token):
-            uid = token[:6]
-        else:
-            raise Http404('No user using this token %s' % token)
-
-        category = data['category']
-        ext = metadata.AI_ext
-
-        filename = '%d_%s.%s' % (uid, category, ext)
-        img = open(filename, 'r')
-        if img:
-            return HttpResponse(data=img, content_type='image/jpg', category=category)
-        else:
-            return HttpResponse('Wait')
+        
+        # if metadata.exist(token):
+        #     uid = token[:6]
+        # else:
+        #     raise Http404('No user using this token %s' % token)
+        # 
+        # category = data['category']
+        # ext = metadata.AI_ext
+        # 
+        # filename = '%d_%s.%s' % (uid, category, ext)
+        # img = open(filename, 'r')
+        # if img:
+        #     return HttpResponse(data=img, content_type='image/jpg', category=category)
+        # else:
+        #     return HttpResponse('Wait')
+        return HttpResponse('test page')
 
     elif request.method == 'POST':
         """
@@ -51,38 +53,56 @@ def cross(request):
         Make save image path, create uid if new, image encoding format
         is discussing now.
         """
+        data = json.loads(request.body.decode('utf-8'))
+        token = request.headers['token']
         if not metadata.exist(token):
-            metadata.push(token)
-
-        uid = token[:6]
-
-        sketch = data['sketch']
-        pattern = data['pattern']
+            if metadata.push(token) == -1:
+                msg = 'Server is busy now. please reconnect a moment later.'
+                print(msg)
+                raise Http404(msg)
+        mode = data['mode']
         category = data['category']
-        recommend = data['recommend']
-
+        if category not in ['shoes', 'handbag']:
+            msg = 'Category must be one of shoes or handbag'
+            print(msg)
+            raise Http404(msg)
         ext = metadata.AI_ext
+        if mode:
+            sketch = data['sketch']
+            pattern = data['pattern']
+            dir_root = os.path.join(metadata.dir_root, token + '/')
+            filename = '%s.%s' % (category, ext)
+            sketch_path = os.path.join(dir_root, 'sketch/', filename)
+            pattern_path = os.path.join(dir_root, 'pattern/', filename)
+            segment_path = os.path.join(dir_root, 'segmentation/', filename)
 
-        sketch_path = '%s%s_%s.%s' % (metadata.sketch_dir, uid, category, ext)
-        pattern_path = '%s%s_%s.%s' % (metadata.pattern_dir, uid, category, ext)
+            with open(sketch_path, 'wb') as f:
+                f.write(base64.decodebytes(str.encode(sketch)))
 
-        with open(sketch_path, 'wb') as f:
-            f.write(base64.decodebytes(str.encode(sketch)))
+            if len(pattern) == 7:
+                color = functions.color_split(pattern)
+                pattern_img = Image.new('RGB', (64, 64), color)
+                pattern_img.save(pattern_path)
+            else:
+                with open(pattern_path, 'wb') as f:
+                    f.write(base64.decodebytes(str.encode(pattern)))
+            segmentate(sketch_path, segment_path)
 
-        if len(pattern) == 7:
-            color = functions.color_split(pattern['image_info'])
-            pattern_img = Image.new('RGB', (32, 32), color)
-            pattern_img.save(pattern_path)
-        else:
-            with open(pattern_path, 'wb') as f:
-                f.write(base64.decodebytes(str.encode(pattern)))
+        model = 'TextureGAN' if mode else 'DiscoGAN'
+        result = functions.file_transform(model, token, category)
+        if not result:
+            raise Http404('file transform error')
 
-        # TODO
-        # connect with forms, AI part.....
-        # Think about multithreading(for GPU) / progressbar
-        result = functions.file_transform(sketch_path, pattern_path, category, recommend)
+        result = Image.open(result)
+        buffer = BytesIO()
+        result.save(buffer)
+        result = base64.b64encode(buffer.getvalue())
+        
         response = {'message': 'update done.', 'result': result}
-        return HttpResponse(data=json.dumps(response))
+        response = HttpResponse(data=json.dumps(response))
+        metadata.pop(token)
+        
+        return response
 
 
 """
