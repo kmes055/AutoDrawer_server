@@ -20,23 +20,12 @@ def file_transform(model, token, category):
 
     if model == 'TextureGAN':
         command = txt_commands + id
-        res = subprocess.check_call(command.split())
-        if res != 0:
-            print('subprocess1 error')
-            return None
-        return texture_path
+        subprocess.Popen(command.split())
     elif model == 'DiscoGAN':
         if not os.path.exists(texture_path):
             return None
         command = disco_commands + id
-        res = subprocess.check_call(command.split())
-        if res != 0:
-            print('subprocess2 error')
-            return None
-        out_category = 'shoes' if category == 'handbag' else 'handbag'
-        return os.path.join(token_dir, 'discoGAN/', '%s.jpg' % out_category)
-    else:
-        return None
+        subprocess.Popen(command.split())
 
 
 def color_split(colorString):
@@ -46,6 +35,24 @@ def color_split(colorString):
     b = int(cs[4:], 16)
     return r, g, b
 
+
+def getProgress(progress, token, category):
+    dir_name = 'C:/Capstone/server_dataset/%s/' % token
+    if progress < .1:
+        if os.path.exists(dir_name + 'sketch/%s.jpg' % category):
+            progress += .05
+    elif progress < .5:
+        if os.path.exists(dir_name + 'segmentation/%s.jpg' % category):
+            progress += .4
+    elif progress < .8:
+        if os.path.exists(dir_name + 'textureGAN/%s.jpg' % category):
+            progress += .3
+    else:
+        if os.path.exists(dir_name + 'discoGAN/%s.jpg' % category):
+            progress += .2
+    if progress < 1 and (progress + .01) % 0.1 != 0:
+        progress += .01
+    return progress
 
 
 'Thread part'

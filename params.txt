@@ -1,0 +1,11 @@
+--gpu 1
+--model texturegan
+--batch_size 1
+--data_path C:/Capstone/server_dataset/
+--num_input_texture_patch 1
+--num_local_texture_patch 1
+--token asdf123
+--category handbag
+
+disco 
+python C:/Capstone/Pytorch_DiscoGAN/discogan_final.py --load_epoch -1 --batchSize 1

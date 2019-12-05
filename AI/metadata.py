@@ -27,6 +27,8 @@ def push(token):
 
 def pop(token):
     __valid_tokens.remove(token)
+    import shutil
+    shutil.rmtree(dir_root + token)
 
 
 def exist(token):

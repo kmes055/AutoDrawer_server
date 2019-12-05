@@ -2,13 +2,12 @@ import json
 import base64
 import os
 from PIL import Image
-from io import BytesIO
 
 from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 
 from AI import functions, metadata
-from AI.segmentation import segmentate
+from AI.async import file_transform
 
 @csrf_exempt
 def cross(request):
@@ -25,27 +24,33 @@ def cross(request):
 
     # data: Dictionary
 
+    token = request.headers['token']
+    ext = metadata.AI_ext
     if request.method == 'GET':
         """
         GET method must requested after transformation.
         Find result filenames, open image in server, send Image object.
         """
-        
-        # if metadata.exist(token):
-        #     uid = token[:6]
-        # else:
-        #     raise Http404('No user using this token %s' % token)
-        # 
-        # category = data['category']
-        # ext = metadata.AI_ext
-        # 
-        # filename = '%d_%s.%s' % (uid, category, ext)
-        # img = open(filename, 'r')
-        # if img:
-        #     return HttpResponse(data=img, content_type='image/jpg', category=category)
-        # else:
-        #     return HttpResponse('Wait')
-        return HttpResponse('test page')
+        base_path = 'C:/Capstone/server_dataset/'
+        user_dir = base_path + token + '/'
+        mode = request.headers['mode']
+        category = request.headers['category']
+        out_category = 'shoes' if category == 'handbag' else 'handbag'
+
+        if mode == 'progress':
+            progress = float(request.headers['progress'])
+            progress = functions.getProgress(progress, token, category)
+            data = {'progress': str(progress)}
+            return HttpResponse(json.dumps(data))
+        elif mode == 'result':
+            with open(user_dir + 'TextureGAN/%s.jpg' % category, 'rb') as f:
+                img1 = base64.b64encode(f.read())
+            with open(user_dir + 'DiscoGAN/%s.jpg' % out_category, 'rb') as f:
+                img2 = base64.b64encode(f.read())
+            data = {'textureGAN': img1, 'discoGAN': img2}
+            return HttpResponse(json.dumps(data))
+        else:
+            return HttpResponse('test')
 
     elif request.method == 'POST':
         """
@@ -54,55 +59,56 @@ def cross(request):
         is discussing now.
         """
         data = json.loads(request.body.decode('utf-8'))
-        token = request.headers['token']
+
         if not metadata.exist(token):
             if metadata.push(token) == -1:
-                msg = 'Server is busy now. please reconnect a moment later.'
-                print(msg)
-                raise Http404(msg)
+                return HttpResponse('Server is busy now. please reconnect just moment later.')
+
         mode = data['mode']
         category = data['category']
+
+        if mode != 'upload':
+            return HttpResponse('mode is not valid.')
+
         if category not in ['shoes', 'handbag']:
-            msg = 'Category must be one of shoes or handbag'
-            print(msg)
-            raise Http404(msg)
-        ext = metadata.AI_ext
-        if mode:
-            sketch = data['sketch']
-            pattern = data['pattern']
-            dir_root = os.path.join(metadata.dir_root, token + '/')
-            filename = '%s.%s' % (category, ext)
-            sketch_path = os.path.join(dir_root, 'sketch/', filename)
-            pattern_path = os.path.join(dir_root, 'pattern/', filename)
-            segment_path = os.path.join(dir_root, 'segmentation/', filename)
+            return Http404('Category must be one of shoes or handbag')
 
-            with open(sketch_path, 'wb') as f:
-                f.write(base64.decodebytes(str.encode(sketch)))
+        sketch = data['sketch']
+        pattern = data['pattern']
+        dir_root = os.path.join(metadata.dir_root, token + '/')
+        filename = '%s.%s' % (category, ext)
+        sketch_path = os.path.join(dir_root, 'sketch/', filename)
+        pattern_path = os.path.join(dir_root, 'pattern/', filename)
+        segment_path = os.path.join(dir_root, 'segmentation/', filename)
 
-            if len(pattern) == 7:
-                color = functions.color_split(pattern)
-                pattern_img = Image.new('RGB', (64, 64), color)
-                pattern_img.save(pattern_path)
-            else:
-                with open(pattern_path, 'wb') as f:
-                    f.write(base64.decodebytes(str.encode(pattern)))
-            segmentate(sketch_path, segment_path)
+        with open(sketch_path, 'wb') as f:
+            f.write(base64.decodebytes(str.encode(sketch)))
 
-        model = 'TextureGAN' if mode else 'DiscoGAN'
-        result = functions.file_transform(model, token, category)
-        if not result:
-            raise Http404('file transform error')
-
-        result = Image.open(result)
-        buffer = BytesIO()
-        result.save(buffer)
-        result = base64.b64encode(buffer.getvalue())
-        
-        response = {'message': 'update done.', 'result': result}
-        response = HttpResponse(data=json.dumps(response))
-        metadata.pop(token)
-        
-        return response
+        if len(pattern) == 7:
+            color = functions.color_split(pattern)
+            pattern_img = Image.new('RGB', (64, 64), color)
+            pattern_img.save(pattern_path)
+        else:
+            with open(pattern_path, 'wb') as f:
+                f.write(base64.decodebytes(str.encode(pattern)))
+        file_transform(token, category)
+        return HttpResponse('ok')
+        #
+        # segmentate(sketch_path, segment_path)
+        #
+        # result = functions.file_transform(mode, token, category)
+        # if not result:
+        #     raise Http404('file transform error')
+        #
+        # # result = Image.open(result)
+        # with open(result, 'rb') as f:
+        #     result = base64.b64encode(f.read())
+        #
+        # response = {'message': 'update done.', 'result': result}
+        # response = HttpResponse(data=json.dumps(response))
+        # metadata.pop(token)
+        #
+        # return response
 
 
 """
