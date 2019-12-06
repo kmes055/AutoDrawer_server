@@ -1,7 +1,7 @@
 from threading import Lock
 import os
 
-max_user = 15
+max_user = 1
 AI_ext = 'jpg'
 file_transform_mutex = Lock()
 category_list = ['handbag', 'shoes', 'hat']

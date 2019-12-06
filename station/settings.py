@@ -130,3 +130,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Metadata for AutoDrawer.
 
 MAX_USER = 15
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1024*1024*30  # 30MB

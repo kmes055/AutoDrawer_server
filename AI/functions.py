@@ -36,21 +36,38 @@ def color_split(colorString):
     return r, g, b
 
 
-def getProgress(progress, token, category):
+progress = 0.
+def setProgress():
+    global progress
+    progress = 0.
+
+
+def getProgress(token, category):
+    out_category = 'shoes' if category == 'handbag' else 'handbag'
+    global progress
     dir_name = 'C:/Capstone/server_dataset/%s/' % token
     if progress < .1:
         if os.path.exists(dir_name + 'sketch/%s.jpg' % category):
-            progress += .05
+            progress += .1
+        elif progress == .09:
+            return progress
     elif progress < .5:
         if os.path.exists(dir_name + 'segmentation/%s.jpg' % category):
             progress += .4
+        elif progress == .49:
+            return progress
     elif progress < .8:
         if os.path.exists(dir_name + 'textureGAN/%s.jpg' % category):
             progress += .3
+        elif progress == .79:
+            return progress
     else:
-        if os.path.exists(dir_name + 'discoGAN/%s.jpg' % category):
-            progress += .2
-    if progress < 1 and (progress + .01) % 0.1 != 0:
+        if os.path.exists(dir_name + 'discoGAN/%s.jpg' % out_category):
+            progress = 1
+        else:
+            if progress >= 1:
+                progress = 0.99
+    if progress < 1 and int(progress*100) % 100 != 99:
         progress += .01
     return progress
 

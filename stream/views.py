@@ -1,6 +1,7 @@
 import json
 import base64
 import os
+import subprocess
 from PIL import Image
 
 from django.http import HttpResponse, Http404
@@ -22,8 +23,6 @@ def cross(request):
     # 1. change token into user id
     # 2. Drop token column from request body.
 
-    # data: Dictionary
-
     token = request.headers['token']
     ext = metadata.AI_ext
     if request.method == 'GET':
@@ -38,16 +37,21 @@ def cross(request):
         out_category = 'shoes' if category == 'handbag' else 'handbag'
 
         if mode == 'progress':
-            progress = float(request.headers['progress'])
-            progress = functions.getProgress(progress, token, category)
-            data = {'progress': str(progress)}
+            progress = functions.getProgress(token, category)
+            data = {'progress': '%.03f' % progress}
             return HttpResponse(json.dumps(data))
         elif mode == 'result':
+            if not os.path.exists(user_dir + 'textureGAN/%s.jpg' % category) or \
+               not os.path.exists(user_dir + 'discoGAN/%s.jpg' % out_category):
+                raise Http404()
+
             with open(user_dir + 'TextureGAN/%s.jpg' % category, 'rb') as f:
-                img1 = base64.b64encode(f.read())
+                img1 = base64.encodebytes(f.read())
             with open(user_dir + 'DiscoGAN/%s.jpg' % out_category, 'rb') as f:
-                img2 = base64.b64encode(f.read())
-            data = {'textureGAN': img1, 'discoGAN': img2}
+                img2 = base64.encodebytes(f.read())
+
+            metadata.pop(token)
+            data = {'textureGAN': img1.decode(), 'discoGAN': img2.decode()}
             return HttpResponse(json.dumps(data))
         else:
             return HttpResponse('test')
@@ -92,11 +96,11 @@ def cross(request):
             with open(pattern_path, 'wb') as f:
                 f.write(base64.decodebytes(str.encode(pattern)))
 
-        import subprocess
-        command = 'C:/Capstone/Pytorch-TextureGAN/async.py %s %s' % (token, category)
-        subprocess.call(command.split())
+        functions.setProgress()
+        command = 'python C:/Capstone/Pytorch-TextureGAN/async.py %s %s' % (token, category)
+        subprocess.Popen(command.split())
 
-        return HttpResponse('ok')
+        return HttpResponse(json.dumps({'msg': 'upload complete'}))
         #
         # segmentate(sketch_path, segment_path)
         #
