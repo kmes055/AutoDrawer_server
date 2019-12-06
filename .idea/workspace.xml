@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1602aa54-7891-4fa1-bb0b-3e83c72d9d29" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AI/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AI/metadata.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/metadata.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/station/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/station/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/async.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/stream/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/stream/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/stream/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="418">
-              <caret line="94" column="26" selection-start-line="94" selection-start-column="26" selection-end-line="94" selection-end-column="26" />
+            <state relative-caret-position="413">
+              <caret line="93" lean-forward="true" selection-start-line="93" selection-end-line="93" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -39,11 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="async.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AI/async.py">
+      <file leaf-file-name="async.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../../Pytorch-TextureGAN/async.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+            <state relative-caret-position="456">
+              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
               </folding>
@@ -63,7 +61,7 @@
       <file leaf-file-name="metadata.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AI/metadata.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="570">
+            <state relative-caret-position="551">
               <caret line="30" selection-start-line="30" selection-end-line="30" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
@@ -112,6 +110,7 @@
         <option value="$PROJECT_DIR$/AI/segmentation.py" />
         <option value="$PROJECT_DIR$/AI/functions.py" />
         <option value="$PROJECT_DIR$/AI/async.py" />
+        <option value="$PROJECT_DIR$/../../Pytorch-TextureGAN/async.py" />
         <option value="$PROJECT_DIR$/stream/views.py" />
       </list>
     </option>
@@ -125,8 +124,8 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="2873" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="946" />
     <option name="width" value="974" />
     <option name="height" value="1087" />
   </component>
@@ -184,7 +183,26 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.manage">
+  <component name="RunManager" selected="Python.async">
+    <configuration name="async" type="PythonConfigurationType" factoryName="Python">
+      <module name="station" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\JunSoo\AppData\Local\conda\conda\envs\TensorFlow-gpu\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../Pytorch-TextureGAN" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../../Pytorch-TextureGAN/async.py" />
+      <option name="PARAMETERS" value="asdf123 handbag" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <configuration name="functions" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="station" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -309,6 +327,7 @@
       <item itemvalue="Python.sample" />
       <item itemvalue="Python.views" />
       <item itemvalue="Python.functions" />
+      <item itemvalue="Python.async" />
     </list>
     <recent_temporary>
       <list>
@@ -349,7 +368,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2873" y="0" width="974" height="1087" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -359,7 +378,7 @@
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.29113925" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24070022" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12260128" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" weight="0.3785558" />
@@ -392,13 +411,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/stream/tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stream/admin.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -655,30 +667,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AI/segmentation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="28" column="15" lean-forward="true" selection-end-line="109" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-            <element signature="e#668#2262#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AI/async.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-          <folding>
-            <element signature="e#0#17#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/AI/segmentation.py" />
     <entry file="file://$PROJECT_DIR$/AI/metadata.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
+        <state relative-caret-position="551">
           <caret line="30" selection-start-line="30" selection-end-line="30" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
@@ -696,12 +688,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/AI/async.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="16" selection-end-line="23" />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/stream/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="94" column="26" selection-start-line="94" selection-start-column="26" selection-end-line="94" selection-end-column="26" />
+        <state relative-caret-position="413">
+          <caret line="93" lean-forward="true" selection-start-line="93" selection-end-line="93" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../Pytorch-TextureGAN/async.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -7,7 +7,7 @@ from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 
 from AI import functions, metadata
-from AI.async import file_transform
+
 
 @csrf_exempt
 def cross(request):
@@ -91,7 +91,11 @@ def cross(request):
         else:
             with open(pattern_path, 'wb') as f:
                 f.write(base64.decodebytes(str.encode(pattern)))
-        file_transform(token, category)
+
+        import subprocess
+        command = 'C:/Capstone/Pytorch-TextureGAN/async.py %s %s' % (token, category)
+        subprocess.call(command.split())
+
         return HttpResponse('ok')
         #
         # segmentate(sketch_path, segment_path)
