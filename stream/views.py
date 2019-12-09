@@ -101,6 +101,7 @@ def cross(request):
         subprocess.Popen(command.split())
 
         return HttpResponse(json.dumps({'msg': 'upload complete'}))
+
         #
         # segmentate(sketch_path, segment_path)
         #
